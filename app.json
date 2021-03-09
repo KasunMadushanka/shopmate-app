@@ -5,6 +5,7 @@
     "name": "shopmate-app",
     "slug": "shopmate-app",
     "version": "1.0.0",
+    "scheme": "shopmate-app",
     "assetBundlePatterns": [
       "**/*"
     ]
