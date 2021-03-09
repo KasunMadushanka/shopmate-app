@@ -1,0 +1,12 @@
+{
+  "name": "shopmate-app",
+  "displayName": "shopmate-app",
+  "expo": {
+    "name": "shopmate-app",
+    "slug": "shopmate-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
