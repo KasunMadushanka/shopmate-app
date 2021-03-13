@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 export default function CameraPreview ({photo, retakePicture, savePhoto}: any) {
-    console.log('sdsfds', photo)
+
     return (
       <View
         style={{

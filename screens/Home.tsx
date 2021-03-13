@@ -7,8 +7,9 @@ import {
     TouchableOpacity,
     ActivityIndicator,
 } from "react-native";
-import { Auth } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 import { Camera } from "expo-camera";
+import * as ImageManipulator from 'expo-image-manipulator';
 import CameraPreview from "../components/CameraPreview";
 
 let camera: Camera;
@@ -43,7 +44,7 @@ export default class Home extends PureComponent {
 
     startCamera = async () => {
         const { status } = await Camera.requestPermissionsAsync();
-        console.log(status);
+      
         if (status === "granted") {
             this.setState({ startCamera: true });
         } else {
@@ -52,15 +53,47 @@ export default class Home extends PureComponent {
     };
 
     takePicture = async () => {
-        const photo: any = await camera.takePictureAsync();
-        console.log(photo);
+        const photo: any = await camera.takePictureAsync({
+            base64: true,
+            quality: 0,
+        });
+      
         this.setState({ previewVisible: true });
         //setStartCamera(false)
         this.setState({ capturedImage: photo });
     };
 
-    savePhoto = () => {
-        console.log(this.state.capturedImage)
+    savePhoto = async () => {
+        const photo = this.state.capturedImage;
+
+        const resizedPhoto = await ImageManipulator.manipulateAsync(
+            photo.uri,
+            [{ resize: { width: 100 } }], 
+            { compress: 0.7, format: 'jpeg', base64: true },
+           );
+           
+        const currentSession = await Auth.currentSession();
+
+        const apiName = "shopmate-api"; 
+        const path = "/staging/product-images"; 
+        const myInit = {
+            body: {
+                 image: JSON.stringify(resizedPhoto.base64),
+            },
+            headers: {
+                Authorization: "Bearer " + currentSession.getIdToken().getJwtToken(),
+                'Content-Type': "multipart/form-data"
+            },
+        };
+        
+        API.post(apiName, path, myInit)
+            .then((response: any) => {
+                console.log(response)
+               
+            })
+            .catch((error: any) => {
+                console.log(error.response);
+            });
     };
 
     retakePicture = () => {

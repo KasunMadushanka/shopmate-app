@@ -33,7 +33,7 @@ export default class CategoryList extends PureComponent {
         this.setState({ loading: true });
         const currentSession = await Auth.currentSession();
 
-        const apiName = "rehmats-api"; // replace this with your api name.
+        const apiName = "shopmate-api"; // replace this with your api name.
         const path = "/staging/menu-items"; //replace this with the path you have configured on your API
         const myInit = {
             body: {},
