@@ -9,15 +9,13 @@ import {
     TabOneParamList,
     TabTwoParamList,
     TabThreeParamList,
-    TabFourParamList,
-    TabFiveParamList,
 } from "../types";
 
-import Home from "../screens/Home";
-import CategoryList from "../screens/CategoryList";
-import ItemList from "../screens/ItemList";
-import ItemDetails from "../screens/ItemDetails";
-import MyAccount from "../screens/MyAccount";
+import ProductCapturing from "../screens/ProductCapturing";
+import ProductList from "../screens/ProductList";
+import ProductDetails from "../screens/ProductDetails";
+import Settings from "../screens/Settings";
+import Cart from "../screens/Cart";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -26,58 +24,37 @@ export default function BottomTabNavigator() {
 
     return (
         <BottomTab.Navigator
-            initialRouteName="Home"
+            initialRouteName="ProductCapturing"
             tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
         >
             <BottomTab.Screen
-                name="Home"
+                name="Products"
                 component={TabOneNavigator}
                 options={{
                     tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="ios-home-outline" color={color} />
+                        <TabBarIcon name="ios-fast-food-outline" color={color} />
                     ),
                 }}
             />
             <BottomTab.Screen
-                name="Order"
+                name="Cart"
                 component={TabTwoNavigator}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <TabBarIcon
-                            name="ios-fast-food-outline"
+                            name="cart-outline"
                             color={color}
                         />
                     ),
                 }}
             />
             <BottomTab.Screen
-                name="Notifications"
+                name="Settings"
                 component={TabThreeNavigator}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <TabBarIcon
-                            name="notifications-outline"
-                            color={color}
-                        />
-                    ),
-                }}
-            />
-            <BottomTab.Screen
-                name="Recents"
-                component={TabFourNavigator}
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="timer-outline" color={color} />
-                    ),
-                }}
-            />
-            <BottomTab.Screen
-                name="My Account"
-                component={TabFiveNavigator}
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <TabBarIcon
-                            name="person-outline"
+                            name="settings-outline"
                             color={color}
                         />
                     ),
@@ -100,20 +77,49 @@ function TabBarIcon(props: {
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
+const backgroundColor = "#0d98ba";
+
 function TabOneNavigator() {
+    
     return (
         <TabOneStack.Navigator>
             <TabOneStack.Screen
-                name="Home"
-                component={Home}
-                options={{ headerTitle: "SHOPMATE",   headerStyle: {
-                    backgroundColor: '#a10618'
-                 },  headerTintColor: 'white' }}
+                name="ProductCapturing"
+                component={ProductCapturing}
+                options={{
+                    headerTitle: "SHOPMATE",
+                    headerStyle: {
+                        backgroundColor: backgroundColor,
+                    },
+                    headerTintColor: "white",
+                    headerTitleStyle: { alignSelf: "center" },
+                }}
+            />
+            <TabOneStack.Screen
+                name="ProductList"
+                component={ProductList}
+                options={{
+                    headerTitle: "SHOPMATE",
+                    headerStyle: {
+                        backgroundColor: backgroundColor,
+                    },
+                    headerTintColor: "white",
+                }}
+            />
+            <TabOneStack.Screen
+                name="ProductDetails"
+                component={ProductDetails}
+                options={{
+                    headerTitle: "SHOPMATE",
+                    headerStyle: {
+                        backgroundColor: backgroundColor,
+                    },
+                    headerTintColor: "white",
+                }}
             />
         </TabOneStack.Navigator>
     );
 }
-
 
 const TabTwoStack = createStackNavigator<TabTwoParamList>();
 
@@ -121,25 +127,15 @@ function TabTwoNavigator() {
     return (
         <TabTwoStack.Navigator>
             <TabTwoStack.Screen
-                name="CategoryList"
-                component={CategoryList}
-                options={{ headerTitle: "Explore our Menu",   headerStyle: {
-                    backgroundColor: '#a10618'
-                 },  headerTintColor: 'white' }}
-            />
-            <TabTwoStack.Screen
-                name="ItemList"
-                component={ItemList}
-                options={{headerStyle: {
-                    backgroundColor: '#a10618'
-                 },  headerTintColor: 'white' }}
-            />
-             <TabTwoStack.Screen
-                name="ItemDetails"
-                component={ItemDetails}
-                options={{headerStyle: {
-                    backgroundColor: '#a10618'
-                 },  headerTintColor: 'white' }}
+                name="Cart"
+                component={Cart}
+                options={{
+                    headerTitle: "SHOPMATE",
+                    headerStyle: {
+                        backgroundColor: backgroundColor,
+                    },
+                    headerTintColor: "white",
+                }}
             />
         </TabTwoStack.Navigator>
     );
@@ -151,39 +147,16 @@ function TabThreeNavigator() {
     return (
         <TabThreeStack.Navigator>
             <TabThreeStack.Screen
-                name="CategoryList"
-                component={CategoryList}
-                options={{ headerTitle: "Explore our Menu" }}
+                name="Settings"
+                component={Settings}
+                options={{
+                    headerTitle: "SHOPMATE",
+                    headerStyle: {
+                        backgroundColor: backgroundColor,
+                    },
+                    headerTintColor: "white",
+                }}
             />
         </TabThreeStack.Navigator>
     );
 }
-
-const TabFourStack = createStackNavigator<TabFourParamList>();
-
-function TabFourNavigator() {
-    return (
-        <TabFourStack.Navigator>
-            <TabFourStack.Screen
-                name="CategoryList"
-                component={CategoryList}
-                options={{ headerTitle: "Explore our Menu" }}
-            />
-        </TabFourStack.Navigator>
-    );
-}
-
-const TabFiveStack = createStackNavigator<TabFiveParamList>();
-
-function TabFiveNavigator() {
-    return (
-        <TabFiveStack.Navigator>
-            <TabFiveStack.Screen
-                name="MyAccount"
-                component={MyAccount}
-                options={{ headerTitle: "Explore our Menu" }}
-            />
-        </TabFiveStack.Navigator>
-    );
-}
-

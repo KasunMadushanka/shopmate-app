@@ -1,18 +1,27 @@
-import React, { useState } from "react";
-import { Amplify, Auth, API } from "aws-amplify";
+import React, { useState, useEffect, useRef } from "react";
+import { Amplify } from "aws-amplify";
 import { withAuthenticator } from "aws-amplify-react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation from "./navigation";
 import { StatusBar } from "expo-status-bar";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+
+import OrderReducer from "./redux/reducers/OrderReducer";
+import apiConfig from "./config/api-config";
+import authConfig from "./config/auth-config";
 
 Amplify.configure({
     Auth: {
-        userPoolId: "eu-west-2_qBuCKrpPk",
-        region: "eu-west-2",
-        userPoolWebClientId: "tg7ekk3514eb8qbh7errkfvt5",
+        userPoolId: authConfig.userPoolId,
+        region: authConfig.region,
+        userPoolWebClientId: authConfig.userPoolWebClientId,
     },
     Analytics: {
         disabled: true,
@@ -20,13 +29,14 @@ Amplify.configure({
     API: {
         endpoints: [
             {
-                name: "shopmate-api",
-                endpoint:
-                    "https://gzdaqpvpg0.execute-api.eu-west-2.amazonaws.com",
+                name: apiConfig.name,
+                endpoint: apiConfig.endpoint,
             },
         ],
     },
 });
+
+const store = createStore(OrderReducer);
 
 function App() {
     const isLoadingComplete = useCachedResources();
@@ -37,8 +47,10 @@ function App() {
     } else {
         return (
             <SafeAreaProvider>
-                <Navigation colorScheme={colorScheme} />
-                <StatusBar backgroundColor="#ba090f" />
+                <Provider store={store}>
+                    <Navigation colorScheme={colorScheme} />
+                </Provider>
+                <StatusBar backgroundColor="#0d98ba" />
             </SafeAreaProvider>
         );
     }
@@ -55,20 +67,36 @@ const styles = StyleSheet.create({
 
 export default withAuthenticator(App, {
     signUpConfig: {
-        hiddenDefaults: ["phone_number"],
+        hideAllDefaults: true,
         signUpFields: [
             {
                 label: "First Name",
                 key: "given_name",
                 required: true,
                 type: "string",
+                displayOrder: 1
             },
             {
                 label: "Last Name",
                 key: "family_name",
                 required: true,
                 type: "string",
+                displayOrder: 2
+            },
+            {
+                label: "Email",
+                key: "username",
+                required: true,
+                type: "email",
+                displayOrder: 3
+            },
+            {
+                label: "Password",
+                key: "password",
+                required: true,
+                type: "password",
+                displayOrder: 4
             },
         ],
-    },
+    }
 });

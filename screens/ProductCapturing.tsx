@@ -14,7 +14,7 @@ import CameraPreview from "../components/CameraPreview";
 
 let camera: Camera;
 
-export default class Home extends PureComponent {
+export default class ProductCapturing extends PureComponent {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -55,7 +55,7 @@ export default class Home extends PureComponent {
     takePicture = async () => {
         const photo: any = await camera.takePictureAsync({
             base64: true,
-            quality: 0,
+            quality: 1,
         });
       
         this.setState({ previewVisible: true });
@@ -66,12 +66,12 @@ export default class Home extends PureComponent {
     savePhoto = async () => {
         const photo = this.state.capturedImage;
 
+
         const resizedPhoto = await ImageManipulator.manipulateAsync(
             photo.uri,
-            [{ resize: { width: 100 } }], 
+            [{ resize: { width: 200, height: 200 } }], 
             { compress: 0.7, format: 'jpeg', base64: true },
            );
-           
         const currentSession = await Auth.currentSession();
 
         const apiName = "shopmate-api"; 
@@ -88,8 +88,11 @@ export default class Home extends PureComponent {
         
         API.post(apiName, path, myInit)
             .then((response: any) => {
+                this.props.navigation.navigate("ProductDetails", {
+                    products: response,
+                });
                 console.log(response)
-               
+
             })
             .catch((error: any) => {
                 console.log(error.response);
@@ -161,8 +164,10 @@ export default class Home extends PureComponent {
                                                     width: 70,
                                                     height: 70,
                                                     bottom: 0,
+                                                    borderColor: "white",
+                                                    borderWidth: 1,
                                                     borderRadius: 50,
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: "#0d98ba",
                                                 }}
                                             />
                                         </View>
@@ -185,7 +190,7 @@ export default class Home extends PureComponent {
                             style={{
                                 width: 130,
                                 // borderRadius: 4,
-                                backgroundColor: "#14274e",
+                                backgroundColor: "#0d98ba",
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -199,7 +204,7 @@ export default class Home extends PureComponent {
                                     textAlign: "center",
                                 }}
                             >
-                                Open Camera
+                                Capture Product
                             </Text>
                         </TouchableOpacity>
                     </View>
