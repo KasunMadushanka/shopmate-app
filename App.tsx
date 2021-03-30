@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Amplify } from "aws-amplify";
-import { withAuthenticator } from "aws-amplify-react-native";
+import { withAuthenticator, AmplifyTheme } from "aws-amplify-react-native";
 import { StyleSheet, Platform } from "react-native";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
@@ -74,29 +74,30 @@ export default withAuthenticator(App, {
                 key: "given_name",
                 required: true,
                 type: "string",
-                displayOrder: 1
+                displayOrder: 1,
             },
             {
                 label: "Last Name",
                 key: "family_name",
                 required: true,
                 type: "string",
-                displayOrder: 2
+                displayOrder: 2,
             },
             {
                 label: "Email",
                 key: "username",
                 required: true,
                 type: "email",
-                displayOrder: 3
+                displayOrder: 3,
             },
             {
                 label: "Password",
                 key: "password",
                 required: true,
                 type: "password",
-                displayOrder: 4
+                displayOrder: 4,
             },
         ],
-    }
+    },
 });
+

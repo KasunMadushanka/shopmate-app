@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import { Auth, API } from "aws-amplify";
 import { Camera } from "expo-camera";
-import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImageManipulator from "expo-image-manipulator";
 import CameraPreview from "../components/CameraPreview";
+import Toast from "react-native-simple-toast";
 
 let camera: Camera;
 
@@ -22,6 +23,7 @@ export default class ProductCapturing extends PureComponent {
             startCamera: false,
             previewVisible: false,
             capturedImage: null,
+            loading: false,
         };
     }
 
@@ -44,7 +46,7 @@ export default class ProductCapturing extends PureComponent {
 
     startCamera = async () => {
         const { status } = await Camera.requestPermissionsAsync();
-      
+
         if (status === "granted") {
             this.setState({ startCamera: true });
         } else {
@@ -57,42 +59,51 @@ export default class ProductCapturing extends PureComponent {
             base64: true,
             quality: 1,
         });
-      
+
         this.setState({ previewVisible: true });
         //setStartCamera(false)
         this.setState({ capturedImage: photo });
     };
 
     savePhoto = async () => {
+        this.setState({ loading: true });
         const photo = this.state.capturedImage;
-
 
         const resizedPhoto = await ImageManipulator.manipulateAsync(
             photo.uri,
-            [{ resize: { width: 200, height: 200 } }], 
-            { compress: 0.7, format: 'jpeg', base64: true },
-           );
+            [{ resize: { width: 200, height: 200 } }],
+            { compress: 0.7, format: "jpeg", base64: true }
+        );
         const currentSession = await Auth.currentSession();
 
-        const apiName = "shopmate-api"; 
-        const path = "/staging/product-images"; 
+        const apiName = "shopmate-api";
+        const path = "/staging/product-images";
         const myInit = {
             body: {
-                 image: JSON.stringify(resizedPhoto.base64),
+                image: JSON.stringify(resizedPhoto.base64),
             },
             headers: {
-                Authorization: "Bearer " + currentSession.getIdToken().getJwtToken(),
-                'Content-Type': "multipart/form-data"
+                Authorization:
+                    "Bearer " + currentSession.getIdToken().getJwtToken(),
+                "Content-Type": "multipart/form-data",
             },
         };
-        
+
         API.post(apiName, path, myInit)
             .then((response: any) => {
-                this.props.navigation.navigate("ProductDetails", {
-                    products: response,
-                });
                 console.log(response)
-
+                if (response.errorMessage) {
+                    Toast.showWithGravity(
+                        "Failed to retrieve Products",
+                        Toast.LONG,
+                        Toast.BOTTOM
+                    );
+                } else {
+                    this.props.navigation.navigate("ProductDetails", {
+                        products: response,
+                    });
+                }
+                this.setState({ loading: false });
             })
             .catch((error: any) => {
                 console.log(error.response);
@@ -106,7 +117,13 @@ export default class ProductCapturing extends PureComponent {
     };
 
     render() {
-        const { user, startCamera, previewVisible, capturedImage } = this.state;
+        const {
+            user,
+            startCamera,
+            previewVisible,
+            capturedImage,
+            loading,
+        } = this.state;
 
         return (
             <View style={styles.container}>
@@ -117,13 +134,13 @@ export default class ProductCapturing extends PureComponent {
                             width: "100%",
                         }}
                     >
-                        {previewVisible && capturedImage ? (
+                        {previewVisible && capturedImage && !loading ? (
                             <CameraPreview
                                 photo={capturedImage}
                                 savePhoto={this.savePhoto}
                                 retakePicture={this.retakePicture}
                             />
-                        ) : (
+                        ) : !loading ? (
                             <Camera
                                 style={{ flex: 1 }}
                                 ref={(r) => {
@@ -174,6 +191,14 @@ export default class ProductCapturing extends PureComponent {
                                     </View>
                                 </View>
                             </Camera>
+                        ) : (
+                            <View style={styles.loadingIconContainer}>
+                                <ActivityIndicator
+                                    size="large"
+                                    color="#0d98ba"
+                                />
+                                <Text style={{fontSize: 16}}>Retrieving Product Information...</Text>
+                            </View>
                         )}
                     </View>
                 ) : (
@@ -188,13 +213,16 @@ export default class ProductCapturing extends PureComponent {
                         <TouchableOpacity
                             onPress={() => this.startCamera()}
                             style={{
-                                width: 130,
+                                width: 160,
                                 // borderRadius: 4,
                                 backgroundColor: "#0d98ba",
                                 flexDirection: "row",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                height: 40,
+                                height: 55,
+                                borderRadius: 30,
+                                borderWidth: 1,
+                                borderColor: "#0d98ba",
                             }}
                         >
                             <Text
@@ -202,6 +230,7 @@ export default class ProductCapturing extends PureComponent {
                                     color: "#fff",
                                     fontWeight: "bold",
                                     textAlign: "center",
+                                    fontSize: 17,
                                 }}
                             >
                                 Capture Product
@@ -220,5 +249,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
+    },
+    loadingIconContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
     },
 });

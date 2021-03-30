@@ -1,8 +1,11 @@
 import React, { PureComponent } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { colors, SearchBar, Avatar } from "react-native-elements";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default class ProductDetails extends PureComponent {
+    _unsubscribe: any;
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -14,15 +17,30 @@ export default class ProductDetails extends PureComponent {
     }
 
     componentDidMount() {
-        if (this.props.route.params.products) {
-            const product = this.props.route.params.products[0];
-            const recProducts = this.props.route.params.products.splice(1);
-            this.setState({ product: product, recProducts: recProducts });
-        } else if (this.props.route.params.product) {
-            this.setState({ product: this.props.route.params.product });
-        }
-        this.props.navigation.setOptions({ title: this.state.product.name });
+        this._unsubscribe = this.props.navigation.addListener(
+            "focus",
+            () => {
+                this.loadProductDetails();
+            }
+        );
     }
+
+    componentWillUnmount() {
+        this._unsubscribe();
+    }
+
+    loadProductDetails = () => {
+        let products = this.props.route.params.products;
+        let product = this.props.route.params.product;
+
+        if (product) {
+            this.setState({ product: product });
+        } else if (products && products.length > 0) {
+            product = products[0];
+            const recProducts = products.splice(1);
+            this.setState({ product: product, recProducts: recProducts });
+        }
+    };
 
     onChange(number: number, type: any) {
         this.setState({ quantity: number });
@@ -38,8 +56,7 @@ export default class ProductDetails extends PureComponent {
                         rounded
                         size="xlarge"
                         source={{
-                            uri:
-                                "https://freepngimg.com/thumb/burger/6-2-burger-png-image-thumb.png",
+                            uri: product.image_url,
                         }}
                     />
                 </View>

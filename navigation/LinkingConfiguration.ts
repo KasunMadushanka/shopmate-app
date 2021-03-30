@@ -8,29 +8,19 @@ export default {
         screens: {
           TabOne: {
             screens: {
-              CategoryList: 'home',
+              ProductCapturing: 'productCapturing',
+              ProductList: 'productList',
+              ProductDetails: 'productDetails'
             },
           },
           TabTwo: {
             screens: {
-              CategoryList: 'categoryList',
-              ItemList: 'itemList',
-              ItemDetails: 'itemDetails',
+             
             },
           },
           TabThree: {
             screens: {
-              CategoryList: 'categoryList',
-            },
-          },
-          TabFour: {
-            screens: {
-              CategoryList: 'categoryList',
-            },
-          },
-          TabFive: {
-            screens: {
-              CategoryList: 'myAccount',
+              
             },
           },
         },

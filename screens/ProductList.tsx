@@ -1,21 +1,6 @@
 import React, { PureComponent } from "react";
-import { Amplify, Auth, API } from "aws-amplify";
-import {
-    View,
-    Text,
-    StyleSheet,
-    ActivityIndicator,
-    TouchableOpacity,
-    Image,
-    FlatList,
-} from "react-native";
-import { FlatGrid } from "react-native-super-grid";
+import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
 import { ListItem, Avatar, Icon } from "react-native-elements";
-import { SearchBar } from "react-native-elements";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-
-import apiConfig from "../config/api-config";
 
 export default class ProductList extends PureComponent {
     constructor(props: any) {
@@ -50,8 +35,7 @@ export default class ProductList extends PureComponent {
                 rounded
                 size="large"
                 source={{
-                    uri:
-                        "https://freepngimg.com/thumb/burger/6-2-burger-png-image-thumb.png",
+                    uri: item.image_url,
                 }}
             />
             <ListItem.Content>
@@ -117,7 +101,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     nameWrapper: {
-        backgroundColor: "#a10618",
+        backgroundColor: "#0d98ba",
         borderRadius: 10,
         height: 20,
     },
