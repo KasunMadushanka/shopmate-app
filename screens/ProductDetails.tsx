@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { colors, SearchBar, Avatar } from "react-native-elements";
-import { useFocusEffect } from "@react-navigation/native";
+import { Avatar } from "react-native-elements";
 
 export default class ProductDetails extends PureComponent {
     _unsubscribe: any;

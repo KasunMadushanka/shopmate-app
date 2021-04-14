@@ -3,7 +3,6 @@ import {
     StyleSheet,
     Text,
     View,
-    Image,
     TouchableOpacity,
     ActivityIndicator,
 } from "react-native";
@@ -61,7 +60,6 @@ export default class ProductCapturing extends PureComponent {
         });
 
         this.setState({ previewVisible: true });
-        //setStartCamera(false)
         this.setState({ capturedImage: photo });
     };
 

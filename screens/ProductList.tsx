@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { StyleSheet, ActivityIndicator, FlatList } from "react-native";
-import { ListItem, Avatar, Icon } from "react-native-elements";
+import { ListItem, Avatar } from "react-native-elements";
 
 export default class ProductList extends PureComponent {
     constructor(props: any) {

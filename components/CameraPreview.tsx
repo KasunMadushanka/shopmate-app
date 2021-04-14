@@ -1,11 +1,9 @@
-import React, { PureComponent, useState } from "react";
+import React from "react";
 import {
     StyleSheet,
     Text,
     View,
-    Image,
     TouchableOpacity,
-    ActivityIndicator,
     ImageBackground,
 } from "react-native";
 
@@ -36,9 +34,7 @@ export default function CameraPreview({
                         justifyContent: "flex-end",
                     }}
                 >
-                    <View
-                        style={styles.buttonContainer}
-                    >
+                    <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             onPress={retakePicture}
                             style={styles.recaptureButton}
