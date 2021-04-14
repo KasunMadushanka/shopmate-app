@@ -91,19 +91,21 @@ export default class ProductCapturing extends PureComponent {
 
         API.post(apiName, path, myInit)
             .then((response: any) => {
-                console.log(response)
-                if (response.errorMessage) {
-                    Toast.showWithGravity(
-                        "Failed to retrieve Products",
-                        Toast.LONG,
-                        Toast.BOTTOM
-                    );
-                } else {
-                    this.props.navigation.navigate("ProductDetails", {
-                        products: response,
-                    });
-                }
-                this.setState({ loading: false });
+                setTimeout(() => {
+                    console.log(response)
+                    if (response.errorMessage) {
+                        Toast.showWithGravity(
+                            "Failed to retrieve Products",
+                            Toast.LONG,
+                            Toast.BOTTOM
+                        );
+                    } else {
+                        this.props.navigation.navigate("ProductDetails", {
+                            products: response,
+                        });
+                    }
+                    this.setState({ loading: false });
+                }, 3000);
             })
             .catch((error: any) => {
                 console.log(error.response);
